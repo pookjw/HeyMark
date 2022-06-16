@@ -88,8 +88,13 @@
         options.appliesSourcePositionAttributes = YES;
         options.failurePolicy = NSAttributedStringMarkdownParsingFailureReturnError;
         options.interpretedSyntax = NSAttributedStringMarkdownInterpretedSyntaxInlineOnlyPreservingWhitespace;
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithMarkdown:data options:options baseURL:document.fileURL error:&error];
+        NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithMarkdown:data options:options baseURL:document.fileURL error:&error];
         [options release];
+        NSRange totalRange = NSMakeRange(0, mutableAttributedString.length);
+        [mutableAttributedString removeAttribute:NSForegroundColorAttributeName range:totalRange];
+        [mutableAttributedString addAttribute:NSForegroundColorAttributeName value:UIColor.labelColor range:totalRange];
+        NSAttributedString *attributedString = [mutableAttributedString copy];
+        [mutableAttributedString release];
         
         NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary<NSString *, id> new];
         
@@ -105,6 +110,8 @@
         } else {
             userInfo[DocumentContentViewModelDidChangeAttributedTextKey] = attributedString;
         }
+        
+        [attributedString release];
         
         [NSNotificationCenter.defaultCenter postNotificationName:DocumentContentViewModelDidChangeTextNotificationName
                                                           object:self

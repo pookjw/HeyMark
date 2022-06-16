@@ -105,6 +105,7 @@
         return menu;
     };
     self.navigationItem.style = UINavigationItemStyleEditor;
+    self.navigationController.navigationBar.preferredBehavioralStyle = UIBehavioralStylePad;
     
     DocumentContentViewController * __block unretainedSelf = self;
     self.navigationItem.backAction = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
@@ -169,6 +170,61 @@
 - (void)configureEditorTextView {
     UITextView *editorTextView = [UITextView new];
     editorTextView.delegate = self;
+    
+    UILabel *inputAccessoryViewLabel = [UILabel new];
+    inputAccessoryViewLabel.text = @"UIResponder - inputAccessoryView";
+    inputAccessoryViewLabel.backgroundColor = UIColor.whiteColor;
+    inputAccessoryViewLabel.textColor = UIColor.blackColor;
+    inputAccessoryViewLabel.textAlignment = NSTextAlignmentCenter;
+    editorTextView.inputAccessoryView = inputAccessoryViewLabel;
+    [inputAccessoryViewLabel sizeToFit];
+    [inputAccessoryViewLabel release];
+    
+//    UILabel *inputViewLabel = [UILabel new];
+//    inputViewLabel.text = @"UIResponder - inputView";
+//    inputViewLabel.backgroundColor = UIColor.whiteColor;
+//    inputViewLabel.textColor = UIColor.blackColor;
+//    inputViewLabel.textAlignment = NSTextAlignmentCenter;
+//    editorTextView.inputView = inputViewLabel;
+//    [inputViewLabel sizeToFit];
+//    [inputViewLabel release];
+    
+    UIBarButtonItem *boldItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"bold"] style:UIBarButtonItemStylePlain target:self action:@selector(makeBoldWithSelectedRange:)];
+    UIBarButtonItem *italicItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"italic"] style:UIBarButtonItemStylePlain target:self action:@selector(makeItalicWithSelectedRange:)];
+    UIBarButtonItem *styleRepresentedItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"bold.italic.underline"] style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    // menu isn't presented... bug?
+    styleRepresentedItem.menu = [UIMenu menuWithChildren:@[
+        [UICommand commandWithTitle:@"Bold" image:[UIImage systemImageNamed:@"bold"] action:@selector(makeBoldWithSelectedRange:) propertyList:nil],
+        [UICommand commandWithTitle:@"Italic" image:[UIImage systemImageNamed:@"italic"] action:@selector(makeItalicWithSelectedRange:) propertyList:nil]
+    ]];
+    UIBarButtonItemGroup *styleGroup = [[UIBarButtonItemGroup alloc] initWithBarButtonItems:@[boldItem, italicItem] representativeItem:styleRepresentedItem];
+    [boldItem release];
+    [italicItem release];
+    [styleRepresentedItem release];
+    
+    editorTextView.inputAssistantItem.leadingBarButtonGroups = [editorTextView.inputAssistantItem.leadingBarButtonGroups arrayByAddingObject:styleGroup];
+    [styleGroup release];
+    
+    //
+    
+    UIBarButtonItem *decrementItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"minus"] style:UIBarButtonItemStylePlain target:self action:@selector(decreaseSize:)];
+    UIBarButtonItem *incrementItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"plus"] style:UIBarButtonItemStylePlain target:self action:@selector(increaseSize:)];
+    UIBarButtonItem *sizeRepresentedItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"plus.forwardslash.minus"] style:UIBarButtonItemStylePlain target:nil action:nil];
+    sizeRepresentedItem.menu = [UIMenu menuWithChildren:@[
+        [UICommand commandWithTitle:@"Increase Font Size" image:[UIImage systemImageNamed:@"plus"] action:@selector(increaseSize:) propertyList:nil],
+        [UICommand commandWithTitle:@"Decrease Font Size" image:[UIImage systemImageNamed:@"minus"] action:@selector(decreaseSize:) propertyList:nil]
+    ]];
+    UIBarButtonItemGroup *sizeGroup = [[UIBarButtonItemGroup alloc] initWithBarButtonItems:@[decrementItem, incrementItem] representativeItem:sizeRepresentedItem];
+    [decrementItem release];
+    [incrementItem release];
+    [sizeRepresentedItem release];
+    
+    editorTextView.inputAssistantItem.trailingBarButtonGroups = [editorTextView.inputAssistantItem.trailingBarButtonGroups arrayByAddingObject:sizeGroup];
+    [sizeGroup release];
+    
+    //
+    
     [self.stackView addArrangedSubview:editorTextView];
     self.editorTextView = editorTextView;
     [editorTextView release];
@@ -217,14 +273,24 @@
     if (selectedRange.length == 0) return;
     NSString *text = self.editorTextView.text;
     if (text.length == 0) return;
-    NSMutableString *mutableString = [text mutableCopy];
     
-    [mutableString insertString:syntax atIndex:selectedRange.location];
-    [mutableString insertString:syntax atIndex:selectedRange.location + selectedRange.length + syntax.length];
+    // Using `-[UITextView setText:]` will clear NSUndoManager's stack.
+//    NSMutableString *mutableString = [text mutableCopy];
+//    self.editorTextView.selectedTextRange
+
+//    [mutableString insertString:syntax atIndex:selectedRange.location];
+//    [mutableString insertString:syntax atIndex:selectedRange.location + selectedRange.length + syntax.length];
     
-    self.editorTextView.text = mutableString;
-    [self.viewModel textDidChange:mutableString];
-    [mutableString release];
+//    self.editorTextView.text = mutableString;
+    //    [mutableString release];
+    
+    NSString *replacementText = [[syntax stringByAppendingString:[self.editorTextView.text substringWithRange:selectedRange]] stringByAppendingString:syntax];
+    [self.editorTextView replaceRange:self.editorTextView.selectedTextRange withText:replacementText];
+
+//    UITextRange *endRange = [[self.editorTextView _inputController] _textRangeFromNSRange:NSMakeRange((selectedRange.location + selectedRange.length + syntax.length), 0)];
+//    [self.editorTextView replaceRange:endRange withText:syntax];
+    
+    [self.viewModel textDidChange:self.editorTextView.text];
 }
 
 - (void)makeBoldWithSelectedRange:(id)sender {
@@ -236,11 +302,11 @@
 }
 
 - (void)undo:(id)sender {
-    
+    [self.editorTextView.undoManager undo];
 }
 
 - (void)redo:(id)sender {
-    
+    [self.editorTextView.undoManager redo];
 }
 
 - (void)save:(id)sender {

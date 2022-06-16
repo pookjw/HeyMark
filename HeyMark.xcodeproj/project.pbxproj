@@ -78,8 +78,7 @@
 				4F47A75A2850857200E8BDBB /* AppDelegate.m */,
 				4F47A775285085AA00E8BDBB /* SceneDelegate.h */,
 				4F47A776285085B400E8BDBB /* SceneDelegate.m */,
-				4F47A7622850857200E8BDBB /* Document.h */,
-				4F47A7632850857200E8BDBB /* Document.m */,
+				4F9F9DBB285B259F000FF6DC /* Document */,
 				4FDA00602853321200232266 /* DocumentBrowser */,
 				4F9F9DB3285B11B6000FF6DC /* DocumentContent */,
 				4F47A7682850857200E8BDBB /* Assets.xcassets */,
@@ -100,6 +99,15 @@
 				4F9F9DB9285B13A1000FF6DC /* DocumentContentViewModel.m */,
 			);
 			path = DocumentContent;
+			sourceTree = "<group>";
+		};
+		4F9F9DBB285B259F000FF6DC /* Document */ = {
+			isa = PBXGroup;
+			children = (
+				4F47A7622850857200E8BDBB /* Document.h */,
+				4F47A7632850857200E8BDBB /* Document.m */,
+			);
+			path = Document;
 			sourceTree = "<group>";
 		};
 		4FDA00602853321200232266 /* DocumentBrowser */ = {
@@ -342,9 +350,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -373,9 +381,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};

@@ -51,8 +51,7 @@
 - (void)save{
     [self performAsynchronousFileAccessUsingBlock:^{
         [self saveToURL:self.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            [self closeWithCompletionHandler:^(BOOL success) {
-            }];
+            
         }];
     }];
 }
