@@ -37,6 +37,7 @@
 }
 
 - (void)dealloc {
+    [_stackView release];
     [_editorTextView release];
     [_previewTextView release];
     [_viewModel release];
