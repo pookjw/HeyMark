@@ -28,6 +28,7 @@
 }
 
 - (void)dealloc {
+    [self.document closeWithCompletionHandler:^(BOOL success) {}];
     [_document release];
     [_queue release];
     [super dealloc];
