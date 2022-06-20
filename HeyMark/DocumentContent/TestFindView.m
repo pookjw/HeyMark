@@ -18,7 +18,7 @@
         self.backgroundColor = UIColor.systemPinkColor;
         
         UIFindInteraction *findInteraction = [[UIFindInteraction alloc] initWithSessionDelegate:self];
-        [findInteraction setValue:self forKey:@"view"]; // Bug? - *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'Unable to find scene component for presenting find navigator. Is the view the find interaction is attached to in the view hierarchy?(View: (null), Window: (null), Scene: (null))'
+        [self addInteraction:findInteraction];
         [self->_findInteraction release];
         self->_findInteraction = [findInteraction retain];
         [findInteraction release];

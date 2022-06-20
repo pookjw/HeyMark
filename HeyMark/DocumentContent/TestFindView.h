@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TestFindView : UIView
-@property (readonly, nonatomic) UIFindInteraction *findInteraction;
+@property (retain, readonly, nonatomic) UIFindInteraction *findInteraction;
 @end
 
 NS_ASSUME_NONNULL_END
