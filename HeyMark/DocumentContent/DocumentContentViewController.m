@@ -7,11 +7,13 @@
 
 #import "DocumentContentViewController.h"
 #import "DocumentContentViewModel.h"
+#import "TestFindView.h"
 
-@interface DocumentContentViewController () <UITextViewDelegate, UINavigationItemRenameDelegate>
+@interface DocumentContentViewController () <UITextViewDelegate, UINavigationItemRenameDelegate, UISearchResultsUpdating>
 @property (retain) UIStackView *stackView;
 @property (retain) UITextView *editorTextView;
 @property (retain) UITextView *previewTextView;
+@property (retain) TestFindView *testFindView;
 @property (retain) DocumentContentViewModel *viewModel;
 @property (assign) id<DocumentContentViewControllerDelegate> delegate;
 @end
@@ -40,6 +42,7 @@
     [_stackView release];
     [_editorTextView release];
     [_previewTextView release];
+    [_testFindView release];
     [_viewModel release];
     [super dealloc];
 }
@@ -50,13 +53,24 @@
     [self configureStackView];
     [self configureEditorTextView];
     [self configurePreviewTextView];
+    [self configureTestFindView];
     [self configureViewModel];
     [self bind];
 }
 
 - (void)setAttributes {
-    NSString *customizationIdentifier = DocumentContentViewModel.customizationIdentifier;
     self.view.backgroundColor = UIColor.systemBackgroundColor;
+    
+    UISearchController *searchController = [UISearchController new];
+    searchController.searchResultsUpdater = self;
+    searchController.searchSuggestions = @[
+        [UISearchSuggestionItem suggestionWithLocalizedSuggestion:@"Test 1" descriptionString:@"Description" iconImage:[UIImage systemImageNamed:@"pencil.tip"]],
+        [UISearchSuggestionItem suggestionWithLocalizedSuggestion:@"Test 2" descriptionString:@"Description" iconImage:[UIImage systemImageNamed:@"pencil.tip.crop.circle"]]
+    ];
+    self.navigationItem.searchController = searchController;
+    [searchController release];
+    
+    NSString *customizationIdentifier = DocumentContentViewModel.customizationIdentifier;
     self.navigationItem.renameDelegate = self;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.navigationItem.customizationIdentifier = customizationIdentifier;
@@ -170,6 +184,17 @@
 
 - (void)configureEditorTextView {
     UITextView *editorTextView = [UITextView new];
+    editorTextView.findInteractionEnabled = YES;
+    
+    // Double tap search text field to trigger
+    editorTextView.findInteraction.optionsMenuProvider = ^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull defaultOptions) {
+        NSArray<UIMenuElement *> *options = [defaultOptions arrayByAddingObject:[UIAction actionWithTitle:@"Test" image:[UIImage systemImageNamed:@"pencil"] identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            
+        }]];
+        
+        return [UIMenu menuWithChildren:options];
+    };
+    
     editorTextView.delegate = self;
     
     UILabel *inputAccessoryViewLabel = [UILabel new];
@@ -233,10 +258,25 @@
 
 - (void)configurePreviewTextView {
     UITextView *previewTextView = [UITextView new];
+    previewTextView.findInteractionEnabled = YES;
     previewTextView.editable = NO;
     [self.stackView addArrangedSubview:previewTextView];
     self.previewTextView = previewTextView;
     [previewTextView release];
+}
+
+- (void)configureTestFindView {
+    TestFindView *testFindView = [TestFindView new];
+    [self.view addSubview:testFindView];
+    testFindView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [testFindView.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor],
+        [testFindView.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor],
+        [testFindView.widthAnchor constraintEqualToConstant:30.0f],
+        [testFindView.heightAnchor constraintEqualToConstant:30.0f]
+    ]];
+    self.testFindView = testFindView;
+    [testFindView release];
 }
 
 - (void)configureViewModel {
@@ -324,11 +364,11 @@
 }
 
 - (void)increaseSize:(id)sender {
-    
+    [self.editorTextView.findInteraction presentFindNavigatorShowingReplace:YES];
 }
 
 - (void)decreaseSize:(id)sender {
-    
+    [self.testFindView.findInteraction presentFindNavigatorShowingReplace:YES];
 }
 
 #pragma mark UIResponderStandardEditActions
@@ -390,6 +430,19 @@
 
 - (BOOL)navigationItem:(UINavigationItem *)navigationItem shouldEndRenamingWithTitle:(NSString *)title {
     return YES;
+}
+
+#pragma mark UISearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSLog(@"%@", searchController.searchBar.text);
+    NSLog(@"%@", self.editorTextView.findInteraction);
+//    self.editorTextView.findInteraction.searchText = searchController.searchBar.text;
+//    [self.editorTextView.findInteraction findNext];
+}
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController selectingSearchSuggestion:(id<UISearchSuggestion>)searchSuggestion {
+    searchController.searchBar.text = searchSuggestion.localizedSuggestion;
 }
 
 @end

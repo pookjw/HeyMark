@@ -17,6 +17,7 @@
 		4F47A77A28508D9E00E8BDBB /* DocumentBrowserViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F47A77928508D9E00E8BDBB /* DocumentBrowserViewModel.m */; };
 		4F9F9DB6285B11CA000FF6DC /* DocumentContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F9F9DB5285B11CA000FF6DC /* DocumentContentViewController.m */; };
 		4F9F9DBA285B13A1000FF6DC /* DocumentContentViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F9F9DB9285B13A1000FF6DC /* DocumentContentViewModel.m */; };
+		4FCF0B7228600DBA00FFE4B9 /* TestFindView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCF0B7128600DBA00FFE4B9 /* TestFindView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,8 @@
 		4F9F9DB8285B13A1000FF6DC /* DocumentContentViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocumentContentViewModel.h; sourceTree = "<group>"; };
 		4F9F9DB9285B13A1000FF6DC /* DocumentContentViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DocumentContentViewModel.m; sourceTree = "<group>"; };
 		4FA7CC0A285458D3002D316F /* HeyMark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HeyMark.entitlements; sourceTree = "<group>"; };
+		4FCF0B7028600DBA00FFE4B9 /* TestFindView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestFindView.h; sourceTree = "<group>"; };
+		4FCF0B7128600DBA00FFE4B9 /* TestFindView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestFindView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +100,8 @@
 				4F9F9DB5285B11CA000FF6DC /* DocumentContentViewController.m */,
 				4F9F9DB8285B13A1000FF6DC /* DocumentContentViewModel.h */,
 				4F9F9DB9285B13A1000FF6DC /* DocumentContentViewModel.m */,
+				4FCF0B7028600DBA00FFE4B9 /* TestFindView.h */,
+				4FCF0B7128600DBA00FFE4B9 /* TestFindView.m */,
 			);
 			path = DocumentContent;
 			sourceTree = "<group>";
@@ -196,6 +201,7 @@
 				4F47A7642850857200E8BDBB /* Document.m in Sources */,
 				4F47A75E2850857200E8BDBB /* DocumentBrowserViewController.m in Sources */,
 				4F9F9DBA285B13A1000FF6DC /* DocumentContentViewModel.m in Sources */,
+				4FCF0B7228600DBA00FFE4B9 /* TestFindView.m in Sources */,
 				4F47A77A28508D9E00E8BDBB /* DocumentBrowserViewModel.m in Sources */,
 				4F47A75B2850857200E8BDBB /* AppDelegate.m in Sources */,
 			);
